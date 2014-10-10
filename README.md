@@ -24,7 +24,7 @@ var qmean = require( 'compute-qmean' );
 
 #### qmean( arr )
 
-Computes the quadratic mean (root mean square; RMS) of an array of values.
+Computes the quadratic mean (root mean square) of an `array` of values.
 
 ``` javascript
 var data = [ 2, 7, 3, -3, 9 ];
