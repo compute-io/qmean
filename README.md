@@ -2,7 +2,7 @@ Quadratic Mean
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Computes the quadratic mean ([root mean square; RMS](http://en.wikipedia.org/wiki/Root_mean_square)) of an array of values.
+> Computes the quadratic mean ([root mean square; rms](http://en.wikipedia.org/wiki/Root_mean_square)) of an array of values.
 
 
 ## Installation
