@@ -1,8 +1,8 @@
-qmean
+Quadratic Mean
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Computes the quadratic mean of an array of values.
+> Computes the quadratic mean ([root mean square; RMS](http://en.wikipedia.org/wiki/Root_mean_square)) of an array of values.
 
 
 ## Installation
@@ -19,14 +19,32 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 To use the module,
 
 ``` javascript
-var lib = require( 'compute-qmean' );
+var qmean = require( 'compute-qmean' );
+```
+
+#### qmean( arr )
+
+Computes the quadratic mean (root mean square; RMS) of an array of values.
+
+``` javascript
+var data = [ 2, 7, 3, -3, 9 ];
+
+var mu = qmean( data );
+// returns ~5.5136
 ```
 
 
 ## Examples
 
 ``` javascript
-var lib = require( 'compute-qmean' );
+var qmean = require( 'compute-qmean' );
+
+var data = new Array( 1000 );
+for ( var i = 0; i < data.length; i++ ) {
+	data[ i ] = Math.random() * 100;
+}
+
+console.log( qmean( data ) );
 ```
 
 To run the example code from the top-level application directory,
@@ -34,6 +52,21 @@ To run the example code from the top-level application directory,
 ``` bash
 $ node ./examples/index.js
 ```
+
+
+## Notes
+
+The algorithm to compute the quadratic mean first calculates the _L2_ norm before dividing by the square of the `array` length. This particular implementation attempts to avoid overflow and underflow and is accurate to `<1e-13` compared to the canonical formula for calculating the root mean square.
+
+
+## References
+
+- 	Dahlquist, Germund and Bjorck, Ake. _Numerical Methods in Scientific Computing_.
+- 	Blue, James (1978) "A Portable Fortran Program To Find the Euclidean Norm of a Vector". _ACM Transactions on Mathematical Software_.
+- 	Higham, Nicholas J. _Accuracy and Stability of Numerical Algorithms, Second Edition_.
+
+This module implements a one-pass algorithm proposed by S.J. Hammarling.
+
 
 
 ## Tests
