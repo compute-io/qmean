@@ -56,7 +56,7 @@ $ node ./examples/index.js
 
 ## Notes
 
-The algorithm to compute the quadratic mean first calculates the _L2_ norm before dividing by the square of the `array` length. This particular implementation attempts to avoid overflow and underflow and is accurate to `<1e-13` compared to the canonical formula for calculating the root mean square.
+The algorithm to compute the quadratic mean first calculates the _L2_ norm before dividing by the square root of the `array` length. This particular implementation attempts to avoid overflow and underflow and is accurate to `<1e-13` compared to the canonical formula for calculating the root mean square.
 
 
 ## References
