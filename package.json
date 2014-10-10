@@ -1,6 +1,6 @@
 {
   "name": "compute-qmean",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Computes the quadratic mean (root mean square) of an array of values.",
   "author": {
     "name": "Athan Reines",
