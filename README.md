@@ -8,7 +8,7 @@ The quadratic mean is defined as
 
 <div class="equation" align="center" data-raw-text="
 m = \sqrt{ \frac{1}{N} \left( x_0^2 + x_2^2 + \cdots + x_{N-1}^2 \right) }." data-equation="eq:quadratic_mean">
-	<img src="" alt="Equation for the quadratic mean.">
+	<img src="https://cdn.rawgit.com/compute-io/qmean/abbdb7f7ce959b1a5155fdfe38cd9e133ee86686/docs/img/eqn.svg" alt="Equation for the quadratic mean.">
 	<br>
 </div>
 
