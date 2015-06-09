@@ -16,35 +16,220 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 
 ## Usage
 
-To use the module,
 
 ``` javascript
 var qmean = require( 'compute-qmean' );
 ```
 
-#### qmean( arr )
+#### qmean( x[, opts] )
 
-Computes the quadratic mean (root mean square) of an `array` of values.
+Computes the quadratic mean (root mean square). `x` may be either an [`array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays), or [`matrix`](https://github.com/dstructs/matrix).
+
 
 ``` javascript
-var data = [ 2, 7, 3, -3, 9 ];
+var data, mu;
 
-var mu = qmean( data );
+data = [ 2, 7, 3, -3, 9 ];
+
+mu = qmean( data );
+// returns ~5.5136
+
+data = new Int8Array( data );
+mu = qmean( data );
 // returns ~5.5136
 ```
 
+For non-numeric `arrays`, provide an accessor `function` for accessing `array` values.
+
+``` javascript
+var data = [
+	{'x':2},
+	{'x':7},
+	{'x':3},
+	{'x':-3},
+	{'x':9}
+];
+
+function getValue( d, i ) {
+	return d.x;
+}
+
+var mu = qmean( data, {
+	'accessor': getValue
+});
+// returns ~5.5136
+```
+
+If provided a [`matrix`](https://github.com/dstructs/matrix), the function accepts the following `options`:
+
+*	__dim__: dimension along which to compute the [quadratic mean](ttp://en.wikipedia.org/wiki/Root_mean_square). Default: `2` (along the columns).
+*	__dtype__: output [`matrix`](https://github.com/dstructs/matrix) data type. Default: `float64`.
+
+By default, the function computes the [quadratic mean](http://en.wikipedia.org/wiki/Root_mean_square) along the columns (`dim=2`).
+
+``` javascript
+var matrix = require( 'dstructs-matrix' ),
+	data,
+	mat,
+	mu,
+	i;
+
+data = new Int8Array( 25 );
+for ( i = 0; i < data.length; i++ ) {
+	data[ i ] = i;
+}
+mat = matrix( data, [5,5], 'int8' );
+/*
+	[  0  1  2  3  4
+	   5  6  7  8  9
+	  10 11 12 13 14
+	  15 16 17 18 19
+	  20 21 22 23 24 ]
+*/
+
+mu = qmean( mat );
+/*
+	[  2.449
+	   7.141
+	  12.083
+	  17.059
+	  22.045 ]
+*/
+```
+
+To compute the [quadratic mean](ttp://en.wikipedia.org/wiki/Root_mean_square) along the rows, set the `dim` option to `1`.
+
+``` javascript
+mu = qmean( mat, {
+	'dim': 1
+});
+/*
+	[ 12.247, 13.077, 13.928, 14.799, 15.684 ]
+*/
+```
+
+By default, the output [`matrix`](https://github.com/dstructs/matrix) data type is `float64`. To specify a different output data type, set the `dtype` option.
+
+``` javascript
+mu = qmean( mat, {
+	'dim': 1,
+	'dtype': 'uint8'
+});
+/*
+	[ 12, 13, 13, 14, 15 ]
+*/
+
+var dtype = mu.dtype;
+// returns 'uint8'
+```
+
+If provided a [`matrix`](https://github.com/dstructs/matrix) having either dimension equal to `1`, the function treats the [`matrix`](https://github.com/dstructs/matrix) as a [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays) and returns a `numeric` value.
+
+``` javascript
+data = [ 2, 4, 5, 3, 8, 2 ];
+
+// Row vector:
+mat = matrix( new Int8Array( data ), [1,6], 'int8' );
+mu = qmean( mat );
+// returns ~4.509
+
+// Column vector:
+mat = matrix( new Int8Array( data ), [6,1], 'int8' );
+mu = qmean( mat );
+// returns ~4.509
+```
+
+If provided an empty [`array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays), or [`matrix`](https://github.com/dstructs/matrix), the function returns `null`.
+
+``` javascript
+mu = qmean( [] );
+// returns null
+
+mu = qmean( new Int8Array( [] ) );
+// returns null
+
+mu = qmean( matrix( [0,0] ) );
+// returns null
+
+mu = qmean( matrix( [0,10] ) );
+// returns null
+
+mu = qmean( matrix( [10,0] ) );
+// returns null
+```
 
 ## Examples
 
 ``` javascript
-var qmean = require( 'compute-qmean' );
+var matrix = require( 'dstructs-matrix' ),
+	qmean = require( 'compute-qmean' );
 
-var data = new Array( 1000 );
-for ( var i = 0; i < data.length; i++ ) {
+var data,
+	mat,
+	mu,
+	i;
+
+
+// ----
+// Plain arrays...
+data = new Array( 1000 );
+for ( i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.random() * 100;
 }
+mu = qmean( data );
+console.log( 'Arrays: %d\n', mu );
 
-console.log( qmean( data ) );
+
+// ----
+// Object arrays (accessors)...
+function getValue( d ) {
+	return d.x;
+}
+for ( i = 0; i < data.length; i++ ) {
+	data[ i ] = {
+		'x': data[ i ]
+	};
+}
+mu = qmean( data, {
+	'accessor': getValue
+});
+console.log( 'Accessors: %d\n', mu );
+
+
+// ----
+// Typed arrays...
+data = new Int32Array( 1000 );
+for ( i = 0; i < data.length; i++ ) {
+	data[ i ] = Math.random() * 100;
+}
+mu = qmean( data );
+console.log( 'Typed arrays: %d\n', mu );
+
+
+// ----
+// Matrices (along rows)...
+mat = matrix( data, [100,10], 'int32' );
+mu = qmean( mat, {
+	'dim': 1
+});
+console.log( 'Matrix (rows): %s\n', mu.toString() );
+
+
+// ----
+// Matrices (along columns)...
+mu = qmean( mat, {
+	'dim': 2
+});
+console.log( 'Matrix (columns): %s\n', mu.toString() );
+
+
+// ----
+// Matrices (custom output data type)...
+mu = qmean( mat, {
+	'dtype': 'uint8'
+});
+console.log( 'Matrix (%s): %s\n', mu.dtype, mu.toString() );
+
 ```
 
 To run the example code from the top-level application directory,
@@ -56,7 +241,7 @@ $ node ./examples/index.js
 
 ## Notes
 
-The algorithm to compute the quadratic mean first calculates the _L2_ norm before dividing by the square root of the `array` length. This particular implementation attempts to avoid overflow and underflow and is accurate to `<1e-13` compared to the canonical formula for calculating the root mean square.
+The algorithm to compute the quadratic mean first calculates the _L2_ norm before dividing by the square root of the number of elements. This particular implementation attempts to avoid overflow and underflow and is accurate to `<1e-13` compared to the canonical formula for calculating the root mean square.
 
 
 ## References
@@ -73,7 +258,7 @@ This module implements a one-pass algorithm proposed by S.J. Hammarling.
 
 ### Unit
 
-Unit tests use the [Mocha](http://visionmedia.github.io/mocha) test framework with [Chai](http://chaijs.com) assertions. To run the tests, execute the following command in the top-level application directory:
+Unit tests use the [Mocha](http://mochajs.org) test framework with [Chai](http://chaijs.com) assertions. To run the tests, execute the following command in the top-level application directory:
 
 ``` bash
 $ make test
@@ -97,16 +282,15 @@ $ make view-cov
 ```
 
 
+---
 ## License
 
-[MIT license](http://opensource.org/licenses/MIT). 
+[MIT license](http://opensource.org/licenses/MIT).
 
 
----
 ## Copyright
 
-Copyright &copy; 2014. Athan Reines.
-
+Copyright &copy; 2014-2015. The Compute.io Authors.
 
 [npm-image]: http://img.shields.io/npm/v/compute-qmean.svg
 [npm-url]: https://npmjs.org/package/compute-qmean
