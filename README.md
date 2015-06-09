@@ -12,6 +12,7 @@ m = \sqrt{ \frac{1}{N} \left( x_0^2 + x_2^2 + \cdots + x_{N-1}^2 \right) }." dat
 	<br>
 </div>
 
+where `x_0, x_1,...,x_{N-1}` are individual data values and `N` is the total number of values in the data set.
 
 ## Installation
 
