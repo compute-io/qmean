@@ -2,7 +2,15 @@ Quadratic Mean
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Computes the quadratic mean ([root mean square; rms](http://en.wikipedia.org/wiki/Root_mean_square)) of an array of values.
+> Computes the quadratic mean ([root mean square; rms](http://en.wikipedia.org/wiki/Root_mean_square)).
+
+The quadratic mean is defined as
+
+<div class="equation" align="center" data-raw-text="
+m = \sqrt{ \frac{1}{N} \left( x_0^2 + x_2^2 + \cdots + x_{N-1}^2 \right) }." data-equation="eq:quadratic_mean">
+	<img src="" alt="Equation for the quadratic mean.">
+	<br>
+</div>
 
 
 ## Installation
